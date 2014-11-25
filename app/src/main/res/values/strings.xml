@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">LectorTextoIntent</string>
+    <string name="codi">UTF-8</string>
+    <string name="aceptar">Guardar</string>
+    <string name="cancelar">Cancelar</string>
+    <string name="confirmacion">El fichero ha cambiado ¿Quiere confirmar los cambios?</string>
+    <string name="titulo_conf">Confirmación</string>
+    <string name="texto">texto</string>
+    <string name="sinCambios">No hay cambios en el fichero</string>
+    <string name="errorLectura">Error al leer el fichero</string>
+    <string name="errorEscritura">Error al escribir el fichero</string>
+
+</resources>
