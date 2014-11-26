@@ -6,28 +6,19 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Parcel;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.List;
 
 
 public class Principal extends Activity {
@@ -36,6 +27,7 @@ public class Principal extends Activity {
     private String textoOriginal;
     private String ruta;
     private AlertDialog alerta;
+    private boolean dialogo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,13 +36,23 @@ public class Principal extends Activity {
 
         etTexto = (EditText)findViewById(R.id.etTexto);
         textoOriginal = "";
+        dialogo = false;
         leerFichero();
     }
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        aceptar(null);
+        dialogo = savedInstanceState.getBoolean(getString(R.string.dialogo));
+        if(dialogo) {
+            aceptar(null);
+        }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean(getString(R.string.dialogo), dialogo);
     }
 
     @Override
@@ -81,26 +83,29 @@ public class Principal extends Activity {
         dialogo.setCancelable(true);
         dialogo.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialogo, int id) {
-                FileWriter fichero = null;
-                PrintWriter pw = null;
+                FileWriter fichero;
+                PrintWriter pw;
                 try {
                     fichero = new FileWriter(ruta);
                     pw = new PrintWriter(fichero);
                     pw.println(Principal.this.etTexto.getText().toString());
                     pw.close();
                     fichero.close();
+                    Principal.this.dialogo = false;
                     finish();
-                } catch (IOException e){
+                } catch (IOException e) {
                     Toast.makeText(Principal.this, getString(R.string.errorEscritura), Toast.LENGTH_SHORT).show();
                 }
             }
         });
         dialogo.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialogo, int id) {
-               dialogo.dismiss();
+                Principal.this.dialogo = false;
+                dialogo.dismiss();
             }
         });
         alerta = dialogo.create();
+        this.dialogo = true;
         alerta.show();
     }
 
@@ -133,6 +138,7 @@ public class Principal extends Activity {
             try {
                 datos = new URI(data.toString());
             } catch (URISyntaxException e) {
+                Toast.makeText(this, getString(R.string.error), Toast.LENGTH_SHORT).show();
             }
             if (datos != null) {
                 escribirContenido(datos);

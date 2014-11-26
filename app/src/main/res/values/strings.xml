@@ -11,5 +11,7 @@
     <string name="sinCambios">No hay cambios en el fichero</string>
     <string name="errorLectura">Error al leer el fichero</string>
     <string name="errorEscritura">Error al escribir el fichero</string>
+    <string name="dialogo">dialogo</string>
+    <string name="error">Error</string>
 
 </resources>
